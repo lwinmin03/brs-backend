@@ -1,28 +1,40 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import * as qs from 'querystring';
+import * as qs from 'qs'; // Ensure you run: npm install qs @types/qs
+import { EnvConfig } from 'src/config/env.validation';
 
 @Injectable()
 export class MicrosoftService {
-  private readonly tokenEndpoint = `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`;
+  constructor(private config: ConfigService<EnvConfig, true>) {}
+
+  // Getter to ensure ConfigService is ready before accessing variables
+  private get tokenEndpoint() {
+    return `https://login.microsoftonline.com/${this.config.get('TENANT_ID', 'common')}/oauth2/v2.0/token`;
+  }
+  
   private readonly userEndpoint = 'https://graph.microsoft.com/v1.0/me';
 
-  async validateCode(code: string) {
+  async validateCode(code: string): Promise<any> {
     try {
+      const payload = {
+        client_id: this.config.get('CLIENT_ID'),
+        client_secret: this.config.get('CLIENT_SECRET'),
+        code: code,
+        redirect_uri: this.config.get('REDIRECT_URI'),
+        grant_type: 'authorization_code',
+      };
+
       const tokenResponse = await axios.post(
         this.tokenEndpoint,
-        qs.stringify({
-          client_id: '',
-          client_secret: '',
-          code: code,
-          redirect_uri: '',
-          grant_type: 'authorization_code',
-        }),
+        qs.stringify(payload),
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         },
       );
-      const access_token = tokenResponse.data?.access_token;
+
+      const access_token = tokenResponse.data.access_token;
+
       const userResponse = await axios.get(this.userEndpoint, {
         headers: { Authorization: `Bearer ${access_token}` },
       });

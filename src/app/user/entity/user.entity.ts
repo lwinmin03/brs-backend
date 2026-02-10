@@ -7,7 +7,7 @@ export class User {
 @PrimaryGeneratedColumn({})
 id:number
 
-@Column({nullable:false})
+@Column({nullable:false,unique:true})
 mail:string
 
 @Column({nullable:true})
@@ -23,15 +23,9 @@ role:role
 
 
 
-@Column()
+@Column({nullable:true})
 rtHash:string
 
 
-@Column()
-createdAt:Date
-
-
-@Column()
-updatedAt:Date
 
 }
