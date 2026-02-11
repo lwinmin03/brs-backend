@@ -64,4 +64,11 @@ if(user) {
   }
 
 
+
+
+  async findAll():Promise<any>{
+    return await this.userRepository.find({})
+  }
+
+
 }
