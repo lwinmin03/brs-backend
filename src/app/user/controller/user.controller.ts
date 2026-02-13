@@ -20,6 +20,14 @@ async create(@Body() user:CreateUserDto):Promise <any>{
 
 
 
+@Get()
+async findAll():Promise <any> {
+    return await this.userService.findAll()
+}
+
+
+
+
 
 
 
