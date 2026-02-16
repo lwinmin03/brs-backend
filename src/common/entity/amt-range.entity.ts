@@ -1,5 +1,7 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+
+@Entity()
 export class AmtRange {
 
     @PrimaryGeneratedColumn('identity')

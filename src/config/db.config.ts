@@ -5,11 +5,12 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 export default (config: ConfigService): PostgresConnectionOptions => {
   return {
     type: 'postgres',
-    host: config.get<string>('DB_HOST'),
-    port: config.get<number>('DB_PORT'),
-    username: config.get<string>('DB_USERNAME'),
-    password: config.get<string>('DB_PASSWORD'),
-    database: config.get<string>('DB_NAME'),
+    // host: config.get<string>('DB_HOST'),
+    // port: config.get<number>('DB_PORT'),
+    // username: config.get<string>('DB_USERNAME'),
+    // password: config.get<string>('DB_PASSWORD'),
+    // database: config.get<string>('DB_NAME'),
+    url:config.get<string>('URL'),
     synchronize: true,
     logging: true,
 

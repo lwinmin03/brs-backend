@@ -12,7 +12,7 @@ export const envSchema = z.object({
   REDIRECT_URI:z.string(),
 
   JWT_SECRET: z.string().min(1, 'SECRET is required'),
-
+URL:z.string(),
   DB_PORT: z.coerce.number().default(5432),
   DB_USERNAME: z.string(),
   DB_PASSWORD: z.string(),

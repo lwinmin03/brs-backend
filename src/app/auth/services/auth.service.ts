@@ -3,6 +3,7 @@ import { MicrosoftService } from './microsoft.service';
 import { UserService } from 'src/app/user/services/user.service';
 import { Body, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as argon from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,6 @@ export class AuthService {
 
   async SignInWithMicroSoft(code: string) {
     //#1 validate code
-
     const microsoftUser: any = await this.microsoftServcie.validateCode(code);
 
     console.log('MU', microsoftUser);
@@ -77,5 +77,28 @@ export class AuthService {
     ]);
 
     return { accessToken: at, refreshToken: rt };
+  }
+
+  async login(email: string, password: string): Promise<any> {
+    const user: any = this.userService.CheckUser(email);
+
+    if (!user) return { message: 'User does not exist in this system' };
+
+    const isAuth = await argon.verify(user?.password, password);
+
+    if (isAuth) {
+      const { at, rt } = await this.generateToken(
+        user?.id,
+        user?.mail,
+        user?.role,
+      );
+
+      return {
+        access_token: at,
+        refresh_token: rt,
+      };
+    } else {
+      return { message: 'Invalid Credentials' };
+    }
   }
 }

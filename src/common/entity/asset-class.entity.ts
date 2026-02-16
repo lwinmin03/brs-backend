@@ -7,7 +7,7 @@ export class AssetClass {
   @PrimaryGeneratedColumn()
   id:number
 
-  
+  @Column({nullable:true})
   name:string
 
 

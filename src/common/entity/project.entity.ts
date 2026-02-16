@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne } from 'typeorm';
+import { Capex } from './capex/capex.entity';
 
 @Entity('projects')
 export class Project {
@@ -22,4 +23,8 @@ export class Project {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+
+  @OneToOne(() => Capex, (capex) => capex.project)
+capex: Capex;
 }
