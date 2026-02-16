@@ -4,42 +4,34 @@ import { UserService } from 'src/app/user/services/user.service';
 import { Body, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
     private configService: ConfigService,
-    private readonly microsoftServcie: MicrosoftService
+    private readonly microsoftServcie: MicrosoftService,
   ) {}
 
-  async SignInWithMicroSoft(code:string) {
+  async SignInWithMicroSoft(code: string) {
     //#1 validate code
 
+    const microsoftUser: any = await this.microsoftServcie.validateCode(code);
 
-    
-    const microsoftUser: any =await this.microsoftServcie.validateCode(code);
+    console.log('MU', microsoftUser);
 
+    const user: any = await this.userService.CheckUser(microsoftUser?.mail);
 
-
-    console.log("MU",microsoftUser);
-    
- 
-    const user: any =await this.userService.CheckUser(microsoftUser?.mail);
-
-console.log("User",user);
-
+    console.log('User', user);
 
     if (!user) {
-        console.log("Here we go...");
-        
+      console.log('Here we go...');
+
       const saveUser = await this.userService.saveOauthUser(microsoftUser);
-      console.log("Saved",saveUser);
-      
+      console.log('Saved', saveUser);
 
       if (saveUser) {
-        const {at, rt} = await this.generateToken(
+        const { at, rt } = await this.generateToken(
           user?.id,
           user?.mail,
           user?.role,
@@ -52,7 +44,7 @@ console.log("User",user);
         };
       }
     } else {
-      const {at, rt} = await this.generateToken(
+      const { at, rt } = await this.generateToken(
         user?.id,
         user?.mail,
         user?.role,
@@ -70,11 +62,17 @@ console.log("User",user);
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         { sub: id, email, role },
-       { secret: this.configService.get<string>('JWT_SECRET'),expiresIn: '10min' }
+        {
+          secret: this.configService.get<string>('JWT_SECRET'),
+          expiresIn: '10min',
+        },
       ),
       this.jwtService.signAsync(
         { sub: id, email, role },
-        { secret:this.configService.get<string>('JWT_SECRET'), expiresIn: '7d' },
+        {
+          secret: this.configService.get<string>('JWT_SECRET'),
+          expiresIn: '7d',
+        },
       ),
     ]);
 
