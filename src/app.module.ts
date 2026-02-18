@@ -7,6 +7,7 @@ import { AuthModule } from './app/auth/auth.module';
 import { validate } from './config/env.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dbConfig from './config/db.config';
+import { RequestModule } from './app/request/request.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import dbConfig from './config/db.config';
     // 3. Feature Modules
     UserModule,
     AuthModule,
+    RequestModule
   ],
   controllers: [AppController],
   providers: [AppService],

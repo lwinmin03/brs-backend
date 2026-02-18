@@ -15,6 +15,13 @@ export class RequestService{
     ){}
 
 
+    async update ():Promise<any>{
+
+
+
+
+    }
+
 
 
 
@@ -33,7 +40,10 @@ async create(req:RequestDto) :Promise<any> {
     });
 
 
-    return await this.budReqService.save(newBud)
+    return await this.budReqService.save(newBud);
+
+
+
 
 
 

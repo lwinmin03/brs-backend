@@ -9,7 +9,7 @@ export class Request {
 @PrimaryGeneratedColumn('identity')    
 id:number
 
-@Column({type:'decimal',precision:4,scale:19,default:0})
+@Column({type:'decimal',precision:19,scale:4,default:0})
 amount:string
 
 

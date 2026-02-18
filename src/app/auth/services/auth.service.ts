@@ -80,20 +80,40 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<any> {
-    const user: any = this.userService.CheckUser(email);
+
+
+    console.log("Loggin user login");
+    
+    const user: any = await this.userService.CheckUser(email);
 
     if (!user) return { message: 'User does not exist in this system' };
 
+    console.log("Passoword Compare");
+    
+
+
     const isAuth = await argon.verify(user?.password, password);
 
+    console.log("AUTH",isAuth);
+    
+
     if (isAuth) {
-      const { at, rt } = await this.generateToken(
+      const { accessToken: at, refreshToken: rt} = await this.generateToken(
         user?.id,
         user?.mail,
         user?.role,
       );
 
+      console.log(at,rt);
+      
+
+
+
       return {
+        user:{
+          userid:user?.id,
+          role:user?.role
+        },
         access_token: at,
         refresh_token: rt,
       };

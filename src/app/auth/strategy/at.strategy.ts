@@ -7,7 +7,7 @@ import { EnvConfig } from "../../../config/env.validation"; // 2. Import your ty
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
-    constructor(private config: ConfigService<EnvConfig, true>) { // 3. Inject it
+    constructor(private config: ConfigService<EnvConfig, true>) { 
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req: Request) => {

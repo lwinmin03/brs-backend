@@ -10,6 +10,7 @@ export const envSchema = z.object({
   CLIENT_SECRET: z.string(),
   TENANT_ID: z.string(),
   REDIRECT_URI:z.string(),
+  COOKIE_SECRET:z.string(),
 
   JWT_SECRET: z.string().min(1, 'SECRET is required'),
 URL:z.string(),

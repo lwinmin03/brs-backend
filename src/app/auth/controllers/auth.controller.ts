@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { MicrosoftService } from '../services/microsoft.service';
+
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginUserDto } from '../dto/login.dto';
+
+import {type Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -20,8 +22,53 @@ export class AuthController {
 
 
 @Post('/login')
-async Login(@Body() dtoUser:LoginUserDto):Promise<any>{
-  return await this.authService.login(dtoUser.email,dtoUser.password);
+@HttpCode(HttpStatus.OK)
+async Login(@Body() dtoUser:LoginUserDto,
+@Res({passthrough:true}) res:Response<any>
+):Promise<any>{
+const {user,access_token,refresh_token}= await this.authService.login(dtoUser.email,dtoUser.password);
+
+console.log("AT",access_token);
+
+
+console.log("USER",user);
+
+
+
+res.cookie(
+  'access_token',access_token,{
+    httpOnly:true,
+    secure:false,
+    signed:true,
+    sameSite:'lax',
+    expires:new Date(Date.now() + 5*  60 * 1000),
+
+  }
+)
+
+
+
+res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      signed:true,
+      secure: false,
+      sameSite: 'lax',
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 Days
+    });
+
+
+
+    return {
+      data:{
+        user,
+        message:"Login Success"
+      }
+    }
+
+
+
+
+
 }
 
 
