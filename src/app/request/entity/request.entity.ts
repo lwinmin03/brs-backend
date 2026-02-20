@@ -1,9 +1,8 @@
-import { User } from "src/app/user/entity/user.entity";
 import { Capex } from "src/common/entity/capex/capex.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class Request {
+@Entity('request')
+export class BudRequest {
 
   @PrimaryGeneratedColumn('identity')    
   id: number;
@@ -11,20 +10,20 @@ export class Request {
   @Column({ type: 'decimal', precision: 19, scale: 4, default: 0 })
   amount: string;
 
-  @Column({ length: 120 })
-  desc: string;
+ 
+  @Column({ name: 'description', length: 120 }) 
+  desc: string; 
 
-  // 👇 Changed from @OneToOne to @ManyToOne
-  @ManyToOne(() => User)
-  @JoinColumn() 
-  user: User;
 
-  // 👇 Changed from @OneToOne to @ManyToOne
+  @ManyToOne('User')
+  @JoinColumn({name:"userId"}) 
+  user: any; 
+
+// Add this relation!
   @ManyToOne(() => Capex)
-  @JoinColumn()
+  @JoinColumn({ name: 'capexId' })
   capex: Capex;
 
   @Column()
   req_date: Date;
-
 }

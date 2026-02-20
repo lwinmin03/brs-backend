@@ -1,11 +1,10 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { RequestDto } from "../dto/request.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { RequestService } from "../service/request.service";
 import { AtGuard } from "src/app/auth/guard/at.guard";
-import { RoleGuard } from "src/app/auth/guard/role.guard";
-import { Role } from "src/common/decorator/role.decorator";
-import { role } from "src/common/enum/role.enum";
+import { getAllBudgetDto } from "../dto/response/budget.response";
+
 
 @Controller('/request')
 export class RequestController {
@@ -25,7 +24,16 @@ await this.budService.create(Req)
 
 
 
- }   
+ }  
+ 
+ 
+
+ @Get()
+ @UseGuards(AtGuard)
+ async getAllBudget():Promise<getAllBudgetDto[]>{
+ return   await this.budService.findAll()
+
+ }
 
 
 }
